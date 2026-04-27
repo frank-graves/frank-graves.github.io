@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5 ★ SHIT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000;
+            --fg: #FFFFFF;
+            --accent: #A90000;
+            --hover: #FF0000;
+            --border: 2px solid #FFFFFF;
+            --section-pad: 80px 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--fg);
+            font-family: 'VT323', monospace;
+            font-size: 20px;
+            line-height: 1.4;
+            overflow-x: hidden;
+            text-transform: uppercase;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: var(--bg);
+            background: var(--hover);
+        }
+
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* ── HERO ── */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            overflow: hidden;
+        }
+
+        .hero-video-wrap {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .hero-video-wrap::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.62);
+        }
+
+        .hero-video-wrap iframe {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 177.78vh;
+            height: 56.25vw;
+            min-width: 100%;
+            min-height: 100%;
+            transform: translate(-50%, -50%);
+            border: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: clamp(3.5rem, 9vw, 7rem);
+            line-height: 1;
+            letter-spacing: 0.02em;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 0.6ch;
+            height: 0.85em;
+            background: var(--fg);
+            vertical-align: middle;
+            margin-left: 6px;
+            animation: blink 1s steps(1) infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0; }
+        }
+
+        .tagline {
+            font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+            color: var(--accent);
+            margin-top: 12px;
+            letter-spacing: 0.05em;
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg);
+            border-bottom: var(--border);
+        }
+
+        nav .container {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            height: 56px;
+        }
+
+        nav a {
+            font-size: 1.1rem;
+            color: var(--fg);
+            letter-spacing: 0.08em;
+            padding: 2px 6px;
+        }
+
+        nav a:hover {
+            color: var(--bg);
+            background: var(--fg);
+        }
+
+        /* ── SECTIONS ── */
+        section {
+            padding: var(--section-pad);
+            border-top: var(--border);
+        }
+
+        section h2 {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            letter-spacing: 0.1em;
+            margin-bottom: 40px;
+            color: var(--accent);
+        }
+
+        /* ── PROJECTS ── */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .project-card {
+            border: var(--border);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            min-height: 240px;
+        }
+
+        .project-card:hover {
+            border-color: var(--accent);
+        }
+
+        .project-title {
+            font-size: 1.4rem;
+            color: var(--accent);
+            letter-spacing: 0.05em;
+        }
+
+        .project-desc {
+            font-size: 1.05rem;
+            line-height: 1.5;
+            flex: 1;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            color: #888;
+            font-size: 0.95rem;
+        }
+
+        .tech-stack span::before { content: '['; }
+        .tech-stack span::after  { content: ']'; }
+
+        .project-link {
+            align-self: flex-start;
+            border: 1px solid var(--accent);
+            padding: 4px 12px;
+            font-size: 1rem;
+            color: var(--accent);
+            margin-top: auto;
+        }
+
+        .project-link:hover {
+            background: var(--hover);
+            border-color: var(--hover);
+            color: var(--bg);
+        }
+
+        /* ── ABOUT ── */
+        .about-content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 760px;
+            font-size: 1.15rem;
+            line-height: 1.6;
+        }
+
+        /* ── CONTACT ── */
+        #contact .contact-line {
+            font-size: 1.2rem;
+        }
+
+        #contact .contact-line a {
+            border-bottom: 1px solid var(--accent);
+            padding-bottom: 1px;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            border-top: var(--border);
+            padding: 28px 0;
+            text-align: center;
+            font-size: 1rem;
+            color: #666;
+            letter-spacing: 0.06em;
+        }
+
+        footer a {
+            color: #666;
+        }
+
+        footer a:hover {
+            color: var(--bg);
+            background: var(--hover);
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 960px) {
+            .projects-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 0 20px;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav .container {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-video-wrap">
+            <iframe
+                src="https://player.cloudinary.com/embed/?cloud_name=dolkaxmuk&public_id=BIOS_-_Zorrovian_Official_Visualiser-_720p30_ttscgp&autoplay=true&muted=true&loop=true&controls=false"
+                frameborder="0"
+                allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+                allowfullscreen>
+            </iframe>
+        </div>
+        <div class="hero-content container">
+            <h1>[LUCKI GRAVEs]<span class="cursor"></span></h1>
+            <h1><p class="tagline">[5 ★ shit 4 ever]</p></h1>
+        </div>
+    </section>
+
+    <!-- NAV -->
+    <nav>
+        <div class="container">
+            <a href="#projects">[PROJECTS]</a>
+            <a href="#about">[ABOUT]</a>
+            <a href="#contact">[CONTACT]</a>
+        </div>
+    </nav>
+
+    <main>
+        <!-- PROJECTS -->
+        <section id="projects">
+            <div class="container">
+                <h2>PROJECTS</h2>
+                <div class="projects-grid">
+ 
+                    <div class="project-card">
+                        <div class="project-title">PROTONVPN WINDOWS CLIENT</div>
+                        <p class="project-desc">VPN CLIENT WITH ENTERPRISE-GRADE SECURITY. PRIVATE CONNECTIVITY, CENSORSHIP BYPASS, AND GEO-RESTRICTION ACCESS OVER THE PROTONVPN NETWORK.</p>
+                        <div class="tech-stack">
+                            <span>C#</span>
+                            <span>C++</span>
+                            <span>PYTHON</span>
+                            <span>INNO SETUP</span>
+                        </div>
+                        <a href="https://github.com/ProtonVPN/win-app" target="_blank" rel="noopener noreferrer" class="project-link">GITHUB</a>
+                    </div>
+ 
+                    <div class="project-card">
+                        <div class="project-title">EVERYTHING-CLAUDE-CODE</div>
+                        <p class="project-desc">AGENT HARNESS OPTIMIZATION SYSTEM. SKILLS, MEMORY, SECURITY AND RESEARCH-FIRST DEVELOPMENT FOR CLAUDE CODE, CODEX, CURSOR AND BEYOND.</p>
+                        <div class="tech-stack">
+                            <span>JAVASCRIPT</span>
+                            <span>RUST</span>
+                            <span>PYTHON</span>
+                            <span>TYPESCRIPT</span>
+                        </div>
+                        <a href="https://github.com/affaan-m/everything-claude-code" target="_blank" rel="noopener noreferrer" class="project-link">GITHUB</a>
+                    </div>
+ 
+                    <div class="project-card">
+                        <div class="project-title">PAYLOADSALLTHETHINGS</div>
+                        <p class="project-desc">CURATED LIST OF PAYLOADS AND BYPASSES FOR WEB APPLICATION SECURITY, PENTESTING AND CTF CHALLENGES.</p>
+                        <div class="tech-stack">
+                            <span>PYTHON</span>
+                            <span>PHP</span>
+                            <span>RUBY</span>
+                            <span>ASP.NET</span>
+                        </div>
+                        <a href="https://github.com/swisskyrepo/PayloadsAllTheThings" target="_blank" rel="noopener noreferrer" class="project-link">GITHUB</a>
+                    </div>
+ 
+                </div>
+            </div>
+        </section>
+
+                <!-- ABOUT -->
+        <section id="about">
+            <div class="container">
+                <h2>ABOUT</h2>
+                <div class="about-content">
+                    <p>UNIVERSITY STUDENT. SHARP ENOUGH TO UNDERSTAND THE SYSTEMS, TIRED ENOUGH TO QUESTION WHY THEY EXIST.</p>
+                    <p>NO FORMAL EXPERIENCE. JUST CURIOSITY, SOME DECENT CODE, AND THE OCCASIONAL BURST OF PRODUCTIVITY BETWEEN LONG STRETCHES OF NOTHING.</p>
+                    <p>LOOKING FOR SOMETHING WORTH BUILDING. HAVEN'T FOUND IT YET, BUT THE SEARCH IS ONGOING.</p>
+                </div>
+            </div>
+        </section>
+
+ 
+        <!-- CONTACT -->
+        <section id="contact">
+            <div class="container">
+                <h2>CONTACT</h2>
+                <p class="contact-line">REACH OUT: <a href="mailto:your@email.com">lucki.graves@proton.me</a></p>
+            </div>
+        </section>
+    </main>
+ 
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <p>[LUCKI GRAVES] &mdash; 2026 &mdash; <a href="mailto:your@email.com">lucki.graves@proton.me</a></p>
+        </div>
+    </footer>
+ 
+    <script>
+        document.querySelectorAll('nav a').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                document.querySelector(a.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+ 
+</body>
+</html>
