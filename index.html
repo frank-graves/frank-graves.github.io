@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Compara candidatos presidenciales de forma fácil y rápida." />
+  <title>Tu Voto Vale · Infórmate</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+</head>
+<body>
+
+  <div class="noise" aria-hidden="true"></div>
+
+  <nav id="nav">
+    <div class="nav-inner">
+      <span class="nav-logo">🗳️ <strong>TuVotoVale</strong></span>
+      <div class="nav-links">
+        <a href="#candidatos">Candidatos</a>
+        <a href="#comparador">Comparar</a>
+        <a href="#interactivo">Test</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ░░ HERO ░░ -->
+  <section id="hero">
+    <div class="hero-blobs" aria-hidden="true">
+      <div class="blob b1"></div>
+      <div class="blob b2"></div>
+      <div class="blob b3"></div>
+    </div>
+    <div class="floating-chips" aria-hidden="true">
+      <div class="chip c1">💼 Trabajo</div>
+      <div class="chip c2">📚 Educación</div>
+      <div class="chip c3">🛡️ Seguridad</div>
+      <div class="chip c4">🌱 Planeta</div>
+      <div class="chip c5">❤️ Salud</div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge"><span class="pdot"></span>Prueba Piloto · Mi Voto Vale</div>
+      <h1>Infórmate<br><span class="h-em">antes de votar</span></h1>
+      <p class="hero-sub">Conoce a los candidatos en menos de <strong>2 minutos</strong> ✌️</p>
+      <a href="#candidatos" class="btn-cta">
+        <span>Ver candidatos</span>
+        <div class="btn-circle"><i class="fa-solid fa-arrow-down"></i></div>
+      </a>
+    </div>
+    <div class="scroll-indicator" aria-hidden="true"><div class="scroll-line"></div></div>
+  </section>
+
+  <!-- ░░ CANDIDATOS ░░ -->
+  <section id="candidatos">
+    <div class="s-tag" data-aos="fade-up">👥 Los candidatos</div>
+    <h2 class="s-title" data-aos="fade-up" data-aos-delay="60">¿Quiénes compiten?</h2>
+    <p class="s-sub" data-aos="fade-up" data-aos-delay="100">Toca una tarjeta para ver todas sus propuestas detalladas</p>
+    <div class="cards-row">
+
+      <article class="ccard ccard-k" data-candidate="keiko" tabindex="0" role="button" aria-label="Ver propuestas de Keiko Fujimori" data-aos="fade-right">
+        <div class="ccard-glow gk" aria-hidden="true"></div>
+        <header class="ccard-head">
+          <div class="cav cav-k">K</div>
+          <div class="chead-text">
+            <h3>Keiko Fujimori</h3>
+            <span>Fuerza Popular</span>
+          </div>
+          <div class="expand-hint"><i class="fa-solid fa-up-right-from-square"></i></div>
+        </header>
+        <ul class="cprops">
+          <li><span>💼</span><div><strong>Empleo</strong><p>Más empresas, más trabajo</p></div></li>
+          <li><span>📚</span><div><strong>Educación</strong><p>Conectada con el mercado</p></div></li>
+          <li><span>🛡️</span><div><strong>Seguridad</strong><p>Más policías y tecnología</p></div></li>
+          <li><span>🏠</span><div><strong>Vivienda</strong><p>Tu primera casa propia</p></div></li>
+          <li><span>🌱</span><div><strong>Ambiente</strong><p>Energías limpias con inversión</p></div></li>
+        </ul>
+        <footer class="ccard-footer cf-k">
+          Ideal si valoras <strong>emprender</strong> y <strong>seguridad inmediata</strong>
+        </footer>
+      </article>
+
+      <article class="ccard ccard-jp" data-candidate="castillo" tabindex="0" role="button" aria-label="Ver propuestas de Pedro Castillo" data-aos="fade-left">
+        <div class="ccard-glow gjp" aria-hidden="true"></div>
+        <header class="ccard-head">
+          <div class="cav cav-jp">JP</div>
+          <div class="chead-text">
+            <h3>Pedro Castillo</h3>
+            <span>Juntos por el Perú</span>
+          </div>
+          <div class="expand-hint"><i class="fa-solid fa-up-right-from-square"></i></div>
+        </header>
+        <ul class="cprops">
+          <li><span>🏗️</span><div><strong>Empleo</strong><p>El Estado genera trabajo directo</p></div></li>
+          <li><span>🎓</span><div><strong>Educación</strong><p>Universidad gratuita y de calidad</p></div></li>
+          <li><span>👊</span><div><strong>Seguridad</strong><p>Atacar las causas, no solo castigar</p></div></li>
+          <li><span>🏘️</span><div><strong>Vivienda</strong><p>Vivienda digna como derecho</p></div></li>
+          <li><span>🌍</span><div><strong>Ambiente</strong><p>Protección de recursos naturales</p></div></li>
+        </ul>
+        <footer class="ccard-footer cf-jp">
+          Ideal si valoras <strong>igualdad</strong> y <strong>justicia social</strong>
+        </footer>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- MODAL -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-bg" id="modal-bg"></div>
+    <div class="modal-sheet" id="modal-sheet">
+      <div class="modal-handle" aria-hidden="true"></div>
+      <button class="modal-x" id="modal-close" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <!-- ░░ COMPARADOR ░░ -->
+  <section id="comparador">
+    <div class="s-tag" data-aos="fade-up">📊 Compara</div>
+    <h2 class="s-title" data-aos="fade-up" data-aos-delay="60">¿Quién propone más?</h2>
+    <p class="s-sub" data-aos="fade-up" data-aos-delay="100">Nivel de enfoque en cada tema según sus planes de gobierno</p>
+    <div class="legend" data-aos="fade-up" data-aos-delay="130">
+      <span class="leg leg-k"><span></span>Fuerza Popular</span>
+      <span class="leg leg-jp"><span></span>Juntos por el Perú</span>
+    </div>
+    <div class="comp-grid" data-aos="fade-up" data-aos-delay="160">
+      <div class="comp-item" data-k="72" data-jp="88">
+        <div class="comp-label"><span>💼</span>Empleo joven</div>
+        <div class="comp-tracks">
+          <div class="comp-track"><div class="comp-fill fk"></div><span class="comp-val vk">72%</span></div>
+          <div class="comp-track"><div class="comp-fill fjp"></div><span class="comp-val vjp">88%</span></div>
+        </div>
+      </div>
+      <div class="comp-item" data-k="70" data-jp="92">
+        <div class="comp-label"><span>📚</span>Educación</div>
+        <div class="comp-tracks">
+          <div class="comp-track"><div class="comp-fill fk"></div><span class="comp-val vk">70%</span></div>
+          <div class="comp-track"><div class="comp-fill fjp"></div><span class="comp-val vjp">92%</span></div>
+        </div>
+      </div>
+      <div class="comp-item" data-k="90" data-jp="60">
+        <div class="comp-label"><span>🛡️</span>Seguridad</div>
+        <div class="comp-tracks">
+          <div class="comp-track"><div class="comp-fill fk"></div><span class="comp-val vk">90%</span></div>
+          <div class="comp-track"><div class="comp-fill fjp"></div><span class="comp-val vjp">60%</span></div>
+        </div>
+      </div>
+      <div class="comp-item" data-k="68" data-jp="85">
+        <div class="comp-label"><span>❤️</span>Salud mental</div>
+        <div class="comp-tracks">
+          <div class="comp-track"><div class="comp-fill fk"></div><span class="comp-val vk">68%</span></div>
+          <div class="comp-track"><div class="comp-fill fjp"></div><span class="comp-val vjp">85%</span></div>
+        </div>
+      </div>
+      <div class="comp-item" data-k="65" data-jp="88">
+        <div class="comp-label"><span>🌱</span>Medio ambiente</div>
+        <div class="comp-tracks">
+          <div class="comp-track"><div class="comp-fill fk"></div><span class="comp-val vk">65%</span></div>
+          <div class="comp-track"><div class="comp-fill fjp"></div><span class="comp-val vjp">88%</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ INTERACTIVO ░░ -->
+  <section id="interactivo">
+    <div class="s-tag" data-aos="fade-up">🎯 Personaliza</div>
+    <h2 class="s-title" data-aos="fade-up" data-aos-delay="60">¿Qué te importa más?</h2>
+    <p class="s-sub" data-aos="fade-up" data-aos-delay="100">Elige un tema y mira qué propone cada candidato</p>
+    <div class="topics-wrap" data-aos="fade-up" data-aos-delay="140">
+      <button class="tpill" data-t="trabajo"><span>💼</span>Trabajo</button>
+      <button class="tpill" data-t="educacion"><span>📚</span>Educación</button>
+      <button class="tpill" data-t="seguridad"><span>🛡️</span>Seguridad</button>
+      <button class="tpill" data-t="salud"><span>❤️</span>Salud</button>
+      <button class="tpill" data-t="vivienda"><span>🏠</span>Vivienda</button>
+      <button class="tpill" data-t="ambiente"><span>🌱</span>Planeta</button>
+    </div>
+    <div id="result-area" aria-live="polite"></div>
+  </section>
+
+  <!-- ░░ CIERRE ░░ -->
+  <section id="cierre">
+    <div class="cierre-blobs" aria-hidden="true">
+      <div class="cblob cb1"></div>
+      <div class="cblob cb2"></div>
+    </div>
+    <div class="cierre-inner" data-aos="zoom-in">
+      <div class="cierre-emoji">🗳️</div>
+      <h2>Tu voto vale más<br>cuando estás <span class="h-em">informado</span></h2>
+      <p>Comparte esta página con quienes más quieres</p>
+      <div class="cierre-btns">
+        <button id="btn-share" class="btn-share"><i class="fa-solid fa-share-nodes"></i> Compartir ahora</button>
+        <a href="#hero" class="btn-top"><i class="fa-solid fa-arrow-up"></i> Volver arriba</a>
+      </div>
+      <p class="disclaimer">Información basada en propuestas públicas. Consulta también fuentes oficiales.</p>
+    </div>
+  </section>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
