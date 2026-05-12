@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vota Informado - Compara Candidatos Presidenciales Perú</title>
+    <meta name="description" content="Infórmate sobre los candidatos presidenciales del Perú. Compara planes de gobierno y decide con conocimiento.">
+    <meta name="keywords" content="votar, candidatos, Perú, elecciones, jóvenes, información">
+    <meta property="og:title" content="Vota Informado - Compara Candidatos">
+    <meta property="og:description" content="Herramienta interactiva para jóvenes peruanos: compara candidatos presidenciales y sus planes de gobierno.">
+    <meta property="og:image" content="https://via.placeholder.com/1200x630?text=Vota+Informado">
+    <meta property="og:url" content="https://tuusuario.github.io/vota-informado/">
+    <meta name="twitter:card" content="summary_large_image">
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- GSAP CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- AOS CDN -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN (opcional para gráficos) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Estilos adicionales para glassmorphism y modo oscuro */
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .dark .glass {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        body.dark {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+        .hero-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            animation: gradientShift 10s ease infinite;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            z-index: 1000;
+            transition: width 0.3s ease;
+        }
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #667eea;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: fadeOut 2s ease-in-out 3s forwards;
+        }
+        @keyframes fadeOut {
+            to { opacity: 0; visibility: hidden; }
+        }
+        .candidate-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .candidate-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .accordion-content.open {
+            max-height: 500px;
+        }
+        .scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .scroll-to-top.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="font-sans">
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading">
+        <div class="text-center text-white">
+            <i class="fas fa-vote-yea text-6xl mb-4 animate-bounce"></i>
+            <h1 class="text-2xl font-bold">Cargando Vota Informado...</h1>
+        </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 glass p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold">Vota Informado</h1>
+            <div class="flex space-x-4">
+                <button id="darkModeToggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="#hero" class="hover:text-blue-500">Inicio</a>
+                <a href="#why" class="hover:text-blue-500">¿Por Qué?</a>
+                <a href="#candidates" class="hover:text-blue-500">Candidatos</a>
+                <a href="#compare" class="hover:text-blue-500">Comparar</a>
+                <a href="#plans" class="hover:text-blue-500">Planes</a>
+                <a href="#interactive" class="hover:text-blue-500">Interactivo</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero-bg text-white py-20 text-center">
+        <div class="container mx-auto px-4">
+            <h1 class="text-5xl font-bold mb-4 animate-fade-in" data-aos="fade-up">Vota Informado, Decide Mejor</h1>
+            <p class="text-xl mb-8" data-aos="fade-up" data-aos-delay="200">Descubre los planes de gobierno de los candidatos presidenciales y compara para tomar una decisión consciente.</p>
+            <button id="compareBtn" class="bg-white text-purple-600 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition" data-aos="fade-up" data-aos-delay="400">Comparar Candidatos</button>
+        </div>
+    </section>
+
+    <!-- ¿Por Qué Importa Informarse? -->
+    <section id="why" class="py-16 bg-gray-100 dark:bg-gray-800">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-8" data-aos="fade-up">¿Por Qué Importa Informarse?</h2>
+            <p class="text-lg mb-12" data-aos="fade-up" data-aos-delay="200">Como joven peruano, tu voto puede cambiar el futuro. Infórmate sobre las propuestas que afectan tu educación, empleo y seguridad.</p>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="glass p-6 rounded-lg" data-aos="fade-right">
+                    <i class="fas fa-chart-line text-4xl text-blue-500 mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Estadísticas</h3>
+                    <p>El 60% de jóvenes no vota por falta de información. ¡Sé parte del cambio!</p>
+                </div>
+                <div class="glass p-6 rounded-lg" data-aos="fade-up">
+                    <i class="fas fa-users text-4xl text-green-500 mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Comunidad</h3>
+                    <p>Únete a miles de jóvenes que votan informado y responsablemente.</p>
+                </div>
+                <div class="glass p-6 rounded-lg" data-aos="fade-left">
+                    <i class="fas fa-lightbulb text-4xl text-yellow-500 mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Impacto</h3>
+                    <p>Tu decisión afecta políticas de empleo joven y tecnología.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lista de Candidatos -->
+    <section id="candidates" class="py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12" data-aos="fade-up">Candidatos Presidenciales</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="candidatesGrid">
+                <!-- Cards se generan dinámicamente -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparador Interactivo -->
+    <section id="compare" class="py-16 bg-gray-100 dark:bg-gray-800">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12" data-aos="fade-up">Comparador Interactivo</h2>
+            <div class="flex flex-wrap justify-center mb-8">
+                <select id="candidate1" class="p-2 border rounded mr-4">
+                    <option value="">Selecciona Candidato 1</option>
+                </select>
+                <select id="candidate2" class="p-2 border rounded">
+                    <option value="">Selecciona Candidato 2</option>
+                </select>
+            </div>
+            <div id="comparisonTable" class="hidden">
+                <table class="w-full table-auto bg-white dark:bg-gray-700 rounded-lg shadow-lg">
+                    <thead>
+                        <tr class="bg-gray-200 dark:bg-gray-600">
+                            <th class="p-4">Tema</th>
+                            <th class="p-4" id="cand1Name"></th>
+                            <th class="p-4" id="cand2Name"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="comparisonBody">
+                        <!-- Filas se generan dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Planes de Gobierno Resumidos -->
+    <section id="plans" class="py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12" data-aos="fade-up">Planes de Gobierno Resumidos</h2>
+            <div id="plansAccordion">
+                <!-- Acordeones se generan dinámicamente -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Interactiva para Jóvenes -->
+    <section id="interactive" class="py-16 bg-gray-100 dark:bg-gray-800">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-8" data-aos="fade-up">¿Qué Tema Te Importa Más?</h2>
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button class="topic-btn bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-600" data-topic="Trabajo">Trabajo</button>
+                <button class="topic-btn bg-green-500 text-white px-6 py-3 rounded-full hover:bg-green-600" data-topic="Educación">Educación</button>
+                <button class="topic-btn bg-red-500 text-white px-6 py-3 rounded-full hover:bg-red-600" data-topic="Seguridad">Seguridad</button>
+                <button class="topic-btn bg-purple-500 text-white px-6 py-3 rounded-full hover:bg-purple-600" data-topic="Emprendimiento">Emprendimiento</button>
+                <button class="topic-btn bg-yellow-500 text-white px-6 py-3 rounded-full hover:bg-yellow-600" data-topic="Tecnología">Tecnología</button>
+            </div>
+            <div id="topicResults" class="hidden">
+                <h3 class="text-2xl font-bold mb-4">Candidatos que priorizan <span id="selectedTopic"></span></h3>
+                <div id="topicCandidates" class="grid md:grid-cols-2 gap-8">
+                    <!-- Candidatos se muestran dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Final -->
+    <section class="py-16 bg-purple-600 text-white text-center">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-4" data-aos="fade-up">Infórmate Hoy. Decide Mejor Mañana.</h2>
+            <p class="text-xl mb-8" data-aos="fade-up" data-aos-delay="200">Comparte esta herramienta con tus amigos y familia.</p>
+            <button id="shareBtn" class="bg-white text-purple-600 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition" data-aos="fade-up" data-aos-delay="400">Compartir</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 bg-gray-800 text-white text-center">
+        <div class="container mx-auto px-4">
+            <p>&copy; 2026 Vota Informado. Proyecto para MiBanco Challenge.</p>
+            <p class="mt-2">Fomenta la ciudadanía responsable y el voto informado.</p>
+        </div>
+    </footer>
+
+    <!-- Botón Volver Arriba -->
+    <button id="scrollToTop" class="scroll-to-top bg-purple-600 text-white p-3 rounded-full shadow-lg">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // Inicializar AOS
+        AOS.init();
+
+        // Datos DEMO de candidatos (realistas y neutrales)
+        const candidates = [
+            {
+                name: "Ana López",
+                party: "Partido Progreso",
+                age: 45,
+                experience: "Ex Ministra de Educación, Economista",
+                photo: "https://via.placeholder.com/150?text=Ana+López",
+                proposals: ["Reforma educativa integral", "Apoyo a emprendimiento joven", "Inversión en tecnología"],
+                focus: { Economia: 8, Educacion: 9, Seguridad: 6, Tecnologia: 8, EmpleoJoven: 9 },
+                plans: {
+                    Economia: "Reducir déficit fiscal en 3 años, fomentar exportaciones.",
+                    Educacion: "Gratuidad universitaria, becas para jóvenes.",
+                    Seguridad: "Aumentar presupuesto policial, combate a corrupción.",
+                    Salud: "Ampliar cobertura de salud pública.",
+                    Tecnologia: "Internet gratuito en zonas rurales.",
+                    Empleo: "Programas de capacitación laboral.",
+                    MedioAmbiente: "Transición energética sostenible."
+                }
+            },
+            {
+                name: "Carlos Rivera",
+                party: "Alianza Nacional",
+                age: 52,
+                experience: "Ex Alcalde de Lima, Ingeniero",
+                photo: "https://via.placeholder.com/150?text=Carlos+Rivera",
+                proposals: ["Desarrollo urbano sostenible", "Seguridad ciudadana", "Innovación tecnológica"],
+                focus: { Economia: 7, Educacion: 7, Seguridad: 9, Tecnologia: 7, EmpleoJoven: 6 },
+                plans: {
+                    Economia: "Estabilizar moneda, atraer inversiones extranjeras.",
+                    Educacion: "Mejorar infraestructura escolar.",
+                    Seguridad: "Ley antiterrorismo reforzada.",
+                    Salud: "Hospitales modernos en provincias.",
+                    Tecnologia: "Centro de innovación en Lima.",
+                    Empleo: "Apoyo a PYMES.",
+                    MedioAmbiente: "Protección de Amazonía."
+                }
+            },
+            {
+                name: "María González",
+                party: "Movimiento Verde",
+                age: 38,
+                experience: "Activista Ambiental, Abogada",
+                photo: "https://via.placeholder.com/150?text=María+González",
+                proposals: ["Cambio climático", "Educación ambiental", "Empleo verde"],
+                focus: { Economia: 6, Educacion: 8, Seguridad: 5, Tecnologia: 6, EmpleoJoven: 8 },
+                plans: {
+                    Economia: "Economía circular, reducción de pobreza.",
+                    Educacion: "Currículo con sostenibilidad.",
+                    Seguridad: "Prevención de desastres naturales.",
+                    Salud: "Salud preventiva gratuita.",
+                    Tecnologia: "Energías renovables.",
+                    Empleo: "Trabajos en sector verde.",
+                    MedioAmbiente: "Meta cero emisiones 2050."
+                }
+            }
+        ];
+
+        // Generar cards de candidatos
+        const candidatesGrid = document.getElementById('candidatesGrid');
+        candidates.forEach((cand, index) => {
+            const card = document.createElement('div');
+            card.className = 'candidate-card glass p-6 rounded-lg';
+            card.setAttribute('data-aos', 'fade-up');
+            card.innerHTML = `
+                <img src="${cand.photo}" alt="${cand.name}" class="w-24 h-24 rounded-full mx-auto mb-4">
+                <h3 class="text-xl font-bold text-center mb-2">${cand.name}</h3>
+                <p class="text-center text-gray-600 dark:text-gray-400 mb-2">${cand.party}</p>
+                <p class="text-center mb-4">Edad: ${cand.age} | ${cand.experience}</p>
+                <ul class="mb-4">
+                    ${cand.proposals.map(prop => `<li class="flex items-center mb-1"><i class="fas fa-check text-green-500 mr-2"></i>${prop}</li>`).join('')}
+                </ul>
+                <div class="flex justify-around">
+                    <span class="text-sm bg-blue-100 dark:bg-blue-800 px-2 py-1 rounded">Economía: ${cand.focus.Economia}/10</span>
+                    <span class="text-sm bg-green-100 dark:bg-green-800 px-2 py-1 rounded">Educación: ${cand.focus.Educacion}/10</span>
+                </div>
+            `;
+            candidatesGrid.appendChild(card);
+        });
+
+        // Generar opciones para comparador
+        const candidate1Select = document.getElementById('candidate1');
+        const candidate2Select = document.getElementById('candidate2');
+        candidates.forEach(cand => {
+            const option1 = document.createElement('option');
+            option1.value = cand.name;
+            option1.textContent = cand.name;
+            candidate1Select.appendChild(option1);
+            const option2 = document.createElement('option');
+            option2.value = cand.name;
+            option2.textContent = cand.name;
+            candidate2Select.appendChild(option2);
+        });
+
+        // Función para comparar candidatos
+        function compareCandidates() {
+            const cand1 = candidates.find(c => c.name === candidate1Select.value);
+            const cand2 = candidates.find(c => c.name === candidate2Select.value);
+            if (!cand1 || !cand2 || cand1 === cand2) return;
+            document.getElementById('cand1Name').textContent = cand1.name;
+            document.getElementById('cand2Name').textContent = cand2.name;
+            const body = document.getElementById('comparisonBody');
+            body.innerHTML = '';
+            const themes = ['Economia', 'Educacion', 'Seguridad', 'Salud', 'Tecnologia', 'Empleo', 'MedioAmbiente'];
+            themes.forEach(theme => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="p-4 font-bold">${theme}</td>
+                    <td class="p-4">${cand1.plans[theme]}</td>
+                    <td class="p-4">${cand2.plans[theme]}</td>
+                `;
+                body.appendChild(row);
+            });
+            document.getElementById('comparisonTable').classList.remove('hidden');
+            gsap.from('#comparisonTable', { opacity: 0, y: 50, duration: 1 });
+        }
+
+        candidate1Select.addEventListener('change', compareCandidates);
+        candidate2Select.addEventListener('change', compareCandidates);
+
+        // Generar acordeones de planes
+        const plansAccordion = document.getElementById('plansAccordion');
+        candidates.forEach(cand => {
+            const accordion = document.createElement('div');
+            accordion.className = 'mb-4';
+            accordion.innerHTML = `
+                <button class="w-full text-left p-4 bg-gray-200 dark:bg-gray-700 rounded-lg font-bold toggle-accordion">${cand.name} - ${cand.party}</button>
+                <div class="accordion-content p-4 bg-gray-100 dark:bg-gray-800 rounded-b-lg">
+                    <ul>
+                        ${Object.entries(cand.plans).map(([key, value]) => `<li class="mb-2"><strong>${key}:</strong> ${value}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+            plansAccordion.appendChild(accordion);
+        });
+
+        // Toggle acordeones
+        document.querySelectorAll('.toggle-accordion').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const content = btn.nextElementSibling;
+                content.classList.toggle('open');
+            });
+        });
+
+        // Sección interactiva
+        document.querySelectorAll('.topic-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const topic = btn.dataset.topic;
+                document.getElementById('selectedTopic').textContent = topic;
+                const relevant = candidates.filter(cand => {
+                    if (topic === 'Trabajo') return cand.focus.EmpleoJoven > 7;
+                    if (topic === 'Educación') return cand.focus.Educacion > 7;
+                    if (topic === 'Seguridad') return cand.focus.Seguridad > 7;
+                    if (topic === 'Emprendimiento') return cand.focus.Economia > 7;
+                    if (topic === 'Tecnología') return cand.focus.Tecnologia > 7;
+                    return false;
+                });
+                const container = document.getElementById('topicCandidates');
+                container.innerHTML = '';
+                relevant.forEach(cand => {
+                    const card = document.createElement('div');
+                    card.className = 'glass p-4 rounded-lg';
+                    card.innerHTML = `<h4 class="font-bold">${cand.name}</h4><p>${cand.party}</p>`;
+                    container.appendChild(card);
+                });
+                document.getElementById('topicResults').classList.remove('hidden');
+                gsap.from('#topicResults', { opacity: 0, scale: 0.8, duration: 0.5 });
+            });
+        });
+
+        // Modo oscuro
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            darkModeToggle.innerHTML = document.body.classList.contains('dark') ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        });
+
+        // Scroll suave
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Barra de progreso
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.body.offsetHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            document.getElementById('progressBar').style.width = scrollPercent + '%';
+        });
+
+        // Botón volver arriba
+        const scrollToTopBtn = document.getElementById('scrollToTop');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Compartir
+        document.getElementById('shareBtn').addEventListener('click', () => {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Vota Informado',
+                    text: 'Infórmate sobre candidatos presidenciales del Perú.',
+                    url: window.location.href
+                });
+            } else {
+                alert('Comparte este enlace: ' + window.location.href);
+            }
+        });
+
+        // Animaciones GSAP iniciales
+        gsap.from('.hero-bg h1', { opacity: 0, y: -50, duration: 1 });
+        gsap.from('.hero-bg p', { opacity: 0, y: -30, duration: 1, delay: 0.5 });
+        gsap.from('#compareBtn', { opacity: 0, scale: 0.8, duration: 1, delay: 1 });
+
+        // Ocultar loading después de carga
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none';
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
