@@ -1,6 +1,6 @@
 # Cuaderno de oficio — Portafolio estático
 
-Template mínimo para GitHub Pages. Cero build, cero dependencias, cero tracking.
+Portafolio personal bajo la filosofía de El Arquitecto Esbelto.
 
 ## Estructura
 
@@ -10,6 +10,35 @@ Template mínimo para GitHub Pages. Cero build, cero dependencias, cero tracking
 ├── index.html      # Única página, semántica y asimétrica
 ├── styles.css      # Textura, bordes orgánicos, animaciones transform-only
 ├── script.js       # Reveal con IntersectionObserver (1 KB)
-└── assets/fonts/   # (opcional) Coloca aquí tus woff2 variables
+├── favicon.svg     # Sello local, cero request externo
+└── fonts/          # (opcional) Coloca aquí tus woff2 variables
 
 ```
+
+## Despliegue en GitHub Pages
+
+1. Sube este repo a GitHub con nombre `TU_USUARIO.github.io`.
+2. Ve a **Settings → Pages**.
+3. En **Source** elige la rama `main` y carpeta `/ (root)`.
+4. Guarda. Tu sitio estará en `https://TU_USUARIO.github.io/`.
+
+No hay build, no hay Action, no hay dependencias. Pages sirve los archivos tal cual.
+
+## Tipografía variable autoalojada
+
+El CSS incluye fallbacks del sistema. Para activar tipografía variable real:
+
+1. Descarga fuentes con licencia OFL, por ejemplo:
+   - **Fraunces** (display): https://github.com/undercasetype/Fraunces
+   - **Recursive** (texto): https://github.com/arrowtype/recursive
+2. Copia los archivos `.woff2` a `fonts/`.
+3. Descomenta los bloques `@font-face` en `styles.css`.
+
+Nunca uses Google Fonts CDN: viola el requisito de privacidad y añade latencia de red.
+
+## Decisiones de diseño
+
+- **Asimetría**: grids 2fr/1fr y 1fr/2fr alternados, piezas desplazadas, bordes blob.
+- **Rendimiento**: solo `transform` y `opacity` en animaciones; curvas `cubic-bezier` custom.
+- **Color**: papel, tinta, bermellón y liquen. Sin paletas default.
+- **Anti-IA**: variables narrativas (`showcase_conduit`, `artifact_marginalia`) y comentarios con contexto humano.

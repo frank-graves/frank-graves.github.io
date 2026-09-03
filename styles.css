@@ -10,19 +10,19 @@
 
 /* --------------------------------------------------------------------------
    Tipografía variable autoalojada.
-   Coloca los woff2 en /assets/fonts/ y descomenta los @font-face.
+   Coloca los woff2 en /fonts/ y descomenta los @font-face.
    Mientras tanto, el fallback usa fuentes del sistema (cero requests externos).
    Fuentes sugeridas con licencia OFL: Fraunces (display) y Recursive (texto).
    -------------------------------------------------------------------------- */
 /* @font-face {
   font-family: 'Fraunces Variable';
-  src: url('/assets/fonts/Fraunces--variable.woff2') format('woff2-variations');
+  src: url('fonts/Fraunces--variable.woff2') format('woff2-variations');
   font-weight: 100 900;
   font-display: swap;
 }
 @font-face {
   font-family: 'Recursive Variable';
-  src: url('/assets/fonts/Recursive--variable.woff2') format('woff2-variations');
+  src: url('fonts/Recursive--variable.woff2') format('woff2-variations');
   font-weight: 300 1000;
   font-display: swap;
 } */
@@ -150,7 +150,6 @@ body {
 .oficio_titular {
   font-family: var(--pila_display);
   font-size: clamp(2.75rem, 9vw, 6rem);
-  font-variation-settings: 'wght' 700;
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 0.95;
@@ -159,7 +158,6 @@ body {
 .oficio_matiz {
   color: var(--tono_bermellon);
   font-style: italic;
-  font-variation-settings: 'wght' 400;
   font-weight: 400;
 }
 
@@ -246,7 +244,7 @@ body {
   color: var(--tono_bermellon);
   font-family: var(--pila_display);
   font-size: 0.85rem;
-  font-variation-settings: 'wght' 300;
+  font-weight: 300;
 }
 
 .pieza_nombre {
