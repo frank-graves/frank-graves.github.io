@@ -13,12 +13,3 @@ Template mínimo para GitHub Pages. Cero build, cero dependencias, cero tracking
 └── assets/fonts/   # (opcional) Coloca aquí tus woff2 variables
 
 ```
-
-## Despliegue en GitHub Pages
-
-1. Sube este repositorio a GitHub.
-2. Ve a **Settings → Pages**.
-3. En **Source** elige la rama `main` y carpeta `/ (root)`.
-4. Guarda. Tu sitio estará en `https://TU_USUARIO.github.io/TU_REPO/`.
-
-Si usas un repositorio con nombre
