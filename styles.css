@@ -1,0 +1,406 @@
+/* ==========================================================================
+   CUADERNO DE OFICIO — Hoja de estilos
+   --------------------------------------------------------------------------
+   Principios:
+   - Asimetría intencional: el ojo necesita fricción para detenerse.
+   - Solo animamos transform y opacity. Nada de layout/paint en el hilo principal.
+   - Colores con propósito: papel, tinta, bermellón y liquen. Nada de azul default.
+   - Sin sombras genéricas. La textura viene de gradientes sutiles y bordes orgánicos.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Tipografía variable autoalojada.
+   Coloca los woff2 en /assets/fonts/ y descomenta los @font-face.
+   Mientras tanto, el fallback usa fuentes del sistema (cero requests externos).
+   Fuentes sugeridas con licencia OFL: Fraunces (display) y Recursive (texto).
+   -------------------------------------------------------------------------- */
+/* @font-face {
+  font-family: 'Fraunces Variable';
+  src: url('/assets/fonts/Fraunces--variable.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Recursive Variable';
+  src: url('/assets/fonts/Recursive--variable.woff2') format('woff2-variations');
+  font-weight: 300 1000;
+  font-display: swap;
+} */
+
+:root {
+  /* Paleta con alma: papel envejecido, tinta de imprenta, sello bermellón. */
+  --tono_papel: #faf6ef;
+  --tono_tinta: #1c1a17;
+  --tono_bermellon: #c44536;
+  --tono_liquen: #6b7f5e;
+  --tono_lino: #e6dfd2;
+
+  /* Tipografía: variable si está disponible, si no, system-ui. */
+  --pila_display: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
+  --pila_texto: 'Recursive Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Curvas custom. Prohibido ease-in-out. */
+  --curva_reposo: cubic-bezier(0.16, 1, 0.3, 1);   /* easeOutExpo: arranca rápido, aterriza suave */
+  --curva_pulso: cubic-bezier(0.34, 1.56, 0.64, 1); /* rebote contenido, no estridente */
+}
+
+/* Reset mínimo: sin cajas blancas, sin sombras, sin opiniones ajenas. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--tono_papel);
+  /* Textura de papel: dos gradientes tenues que simulan fibra sin cargar imágenes. */
+  background-image:
+    linear-gradient(105deg, transparent 40%, rgba(28, 26, 23, 0.02) 40%, rgba(28, 26, 23, 0.02) 41%, transparent 41%),
+    repeating-linear-gradient(0deg, rgba(28, 26, 23, 0.015) 0 1px, transparent 1px 4px);
+  color: var(--tono_tinta);
+  font-family: var(--pila_texto);
+  font-weight: 400;
+  line-height: 1.6;
+  min-height: 100vh;
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+/* --------------------------------------------------------------------------
+   CABECERA: marca y navegación. La asimetría nace del espacio desigual
+   entre el sello y los enlaces; nada de barra centrada.
+   -------------------------------------------------------------------------- */
+.folio_cabecera {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: clamp(4rem, 10vw, 8rem);
+}
+
+.marca_courier {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--tono_tinta);
+  font-family: var(--pila_display);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.marca_sello {
+  display: inline-block;
+  color: var(--tono_bermellon);
+  transition: transform 0.4s var(--curva_pulso);
+}
+
+.marca_courier:hover .marca_sello {
+  transform: rotate(180deg);
+}
+
+.navegacion_indice {
+  display: flex;
+  gap: clamp(1rem, 2.5vw, 2rem);
+}
+
+.navegacion_enlace {
+  color: var(--tono_tinta);
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  position: relative;
+  text-decoration: none;
+}
+
+/* Subrayado que crece desde la izquierda: transform sobre scaleX, barato. */
+.navegacion_enlace::after {
+  background-color: var(--tono_bermellon);
+  content: '';
+  height: 1px;
+  left: 0;
+  position: absolute;
+  bottom: -4px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s var(--curva_reposo);
+  width: 100%;
+}
+
+.navegacion_enlace:hover::after,
+.navegacion_enlace:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* --------------------------------------------------------------------------
+   OFICIO UMBRAL: presentación asimétrica.
+   Grid 2 columnas con proporción 2fr / 1fr: el titular domina, el prólogo
+   queda como nota al margen. En móvil se apilan.
+   -------------------------------------------------------------------------- */
+.oficio_umbral {
+  display: grid;
+  gap: clamp(2rem, 5vw, 4rem);
+  grid-template-columns: minmax(0, 2fr) minmax(15ch, 1fr);
+  margin-bottom: clamp(5rem, 12vw, 10rem);
+}
+
+.oficio_titular {
+  font-family: var(--pila_display);
+  font-size: clamp(2.75rem, 9vw, 6rem);
+  font-variation-settings: 'wght' 700;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+}
+
+.oficio_matiz {
+  color: var(--tono_bermellon);
+  font-style: italic;
+  font-variation-settings: 'wght' 400;
+  font-weight: 400;
+}
+
+.oficio_prologo {
+  align-self: end;
+  border-left: 2px solid var(--tono_liquen);
+  padding-left: clamp(1rem, 2vw, 1.5rem);
+}
+
+.oficio_prologo p {
+  margin-bottom: 1.5rem;
+  max-width: 34ch;
+}
+
+.botella_contacto {
+  align-items: center;
+  color: var(--tono_tinta);
+  display: inline-flex;
+  gap: 0.5rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.botella_flecha {
+  display: inline-block;
+  transition: transform 0.4s var(--curva_pulso);
+}
+
+.botella_contacto:hover .botella_flecha {
+  transform: translateX(6px);
+}
+
+/* --------------------------------------------------------------------------
+   SHOWCASE_CONDUIT: los proyectos como conductos verticales.
+   Los bordes orgánicos (blob) evitan la caja blanca de bootcamp.
+   Cada pieza impar está desplazada para romper la monotonía vertical.
+   -------------------------------------------------------------------------- */
+.showcase_conduit {
+  margin-bottom: clamp(5rem, 12vw, 10rem);
+}
+
+.showcase_titular,
+.marginalia_titular {
+  color: var(--tono_liquen);
+  font-family: var(--pila_display);
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  margin-bottom: clamp(1.5rem, 4vw, 3rem);
+  text-transform: uppercase;
+}
+
+.pieza_lienzo {
+  background-color: var(--tono_lino);
+  /* Borde orgánico asimétrico: como una hoja recortada a mano. */
+  border-radius: 58% 42% 55% 45% / 55% 48% 52% 45%;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  transition: transform 0.45s var(--curva_reposo);
+}
+
+/* El desplazamiento crea una columna vertebral torcida a propósito. */
+.pieza_lienzo--desplazada {
+  margin-left: clamp(1rem, 4vw, 3rem);
+  margin-right: -1rem;
+}
+
+.pieza_lienzo:hover {
+  /* Solo transform: el compositor lo resuelve sin tocar layout. */
+  transform: translateY(-4px);
+}
+
+.pieza_rotulo {
+  align-items: baseline;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.pieza_numeral {
+  color: var(--tono_bermellon);
+  font-family: var(--pila_display);
+  font-size: 0.85rem;
+  font-variation-settings: 'wght' 300;
+}
+
+.pieza_nombre {
+  font-family: var(--pila_display);
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.pieza_sinopsis {
+  color: var(--tono_tinta);
+  max-width: 48ch;
+  opacity: 0.8;
+}
+
+.pieza_trazo {
+  align-items: center;
+  color: var(--tono_bermellon);
+  display: inline-flex;
+  font-size: 1.5rem;
+  height: 2.5rem;
+  justify-content: center;
+  text-decoration: none;
+  transition: transform 0.4s var(--curva_pulso);
+  width: 2.5rem;
+}
+
+.pieza_trazo:hover {
+  transform: scale(1.1);
+}
+
+/* --------------------------------------------------------------------------
+   ARTIFACT_MARGINALIA: notas al margen, a la derecha, en columna angosta.
+   El grid 1fr / 2fr invierte la jerarquía de la sección anterior.
+   -------------------------------------------------------------------------- */
+.artifact_marginalia {
+  margin-bottom: clamp(5rem, 12vw, 10rem);
+}
+
+.marginalia_trama {
+  display: grid;
+  gap: clamp(1.25rem, 3vw, 2rem);
+  grid-template-columns: 1fr 2fr;
+}
+
+.marginalia_nota {
+  border-top: 1px solid var(--tono_liquen);
+  grid-column: 2;
+  padding-top: 0.75rem;
+}
+
+.marginalia_fecha {
+  color: var(--tono_bermellon);
+  display: block;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------------------
+   COLOFÓN: cierre sin centro. Correo alineado a la derecha, línea a la izquierda.
+   -------------------------------------------------------------------------- */
+.folio_colofon {
+  align-items: baseline;
+  border-top: 2px solid var(--tono_tinta);
+  display: flex;
+  justify-content: space-between;
+  padding-top: 1.5rem;
+}
+
+.colofon_linea {
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.colofon_correo {
+  color: var(--tono_bermellon);
+  font-family: var(--pila_display);
+  font-size: 1.1rem;
+  text-decoration: none;
+}
+
+/* --------------------------------------------------------------------------
+   REVEAL: las piezas entran con translateY y opacity.
+   El estado inicial está inline en el JS para evitar FOUC si no hay JS.
+   -------------------------------------------------------------------------- */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s var(--curva_reposo), transform 0.7s var(--curva_reposo);
+}
+
+[data-reveal].es_visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --------------------------------------------------------------------------
+   ACCESIBILIDAD: respeta el movimiento reducido. Sin excepción.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   RESPONSIVE: en pantallas angostas la asimetría se simplifica, no desaparece.
+   -------------------------------------------------------------------------- */
+@media (max-width: 720px) {
+  .oficio_umbral {
+    grid-template-columns: 1fr;
+  }
+
+  .oficio_prologo {
+    border-left: 0;
+    border-top: 2px solid var(--tono_liquen);
+    padding-left: 0;
+    padding-top: 1rem;
+  }
+
+  .pieza_lienzo,
+  .pieza_lienzo--desplazada {
+    grid-template-columns: 1fr;
+    margin-left: 0;
+    margin-right: 0;
+    border-radius: 42% 58% 45% 55% / 48% 52% 48% 52%;
+  }
+
+  .pieza_trazo {
+    justify-self: end;
+  }
+
+  .marginalia_trama {
+    grid-template-columns: 1fr;
+  }
+
+  .marginalia_nota {
+    grid-column: 1;
+  }
+
+  .folio_colofon {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}

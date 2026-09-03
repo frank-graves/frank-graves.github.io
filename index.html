@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Portafolio de Alex — artesano digital. Proyectos, notas y marginalia." />
+  <title>Alex — Cuaderno de oficio</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!--
+    Estructura narrativa del portafolio:
+    - showcase_conduit: el canal principal que conduce la mirada.
+    - artifact_marginalia: piezas secundarias, como notas al margen de un cuaderno.
+    La asimetría del grid imita la composición de una página manuscrita: el ojo
+    entra por el titular grande, deriva a la columna angosta y aterriza en los artefactos.
+  -->
+  <header class="folio_cabecera" role="banner">
+    <a class="marca_courier" href="/" aria-label="Volver al inicio">
+      <span class="marca_sello" aria-hidden="true">◐</span>
+      <span>Alex</span>
+    </a>
+    <nav class="navegacion_indice" aria-label="Navegación principal">
+      <a href="#oficio" class="navegacion_enlace">Oficio</a>
+      <a href="#marginalia" class="navegacion_enlace">Marginalia</a>
+      <a href="#correspondencia" class="navegacion_enlace">Correspondencia</a>
+    </nav>
+  </header>
+
+  <main id="contenido_principal">
+    <!-- OFICIO: presentación asimétrica. El titular grande y la columna angosta
+         crean tensión visual; el espacio vacío a la derecha es intencional. -->
+    <section class="oficio_umbral" id="oficio" aria-labelledby="oficio_titular">
+      <h1 id="oficio_titular" class="oficio_titular">
+        Artesano digital.<br />
+        <em class="oficio_matiz">Código con textura</em>
+      </h1>
+      <div class="oficio_prologo">
+        <p>
+          Construyo interfaces que respiran: pocas dependencias, tipografía propia
+          y movimiento que no cobra peaje al hardware.
+        </p>
+        <a class="botella_contacto" href="#correspondencia">
+          Escribamos algo
+          <span class="botella_flecha" aria-hidden="true">↳</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- SHOWCASE_CONDUIT: cada pieza es un conducto hacia un proyecto.
+         El listado es vertical y asimétrico; los bordes orgánicos evitan la caja blanca. -->
+    <section class="showcase_conduit" id="showcase_conduit" aria-labelledby="showcase_titular">
+      <h2 id="showcase_titular" class="showcase_titular">Obra reciente</h2>
+
+      <article class="pieza_lienzo" data-reveal>
+        <div class="pieza_rotulo">
+          <span class="pieza_numeral">01</span>
+          <h3 class="pieza_nombre">Sieve</h3>
+        </div>
+        <p class="pieza_sinopsis">
+          Filtro de eventos para sistemas de colas. Separa el trigo del ruido
+          con una huella de memoria de 2 MB.
+        </p>
+        <a class="pieza_trazo" href="#" aria-label="Ver proyecto Sieve">
+          <span aria-hidden="true">⟶</span>
+        </a>
+      </article>
+
+      <article class="pieza_lienzo pieza_lienzo--desplazada" data-reveal>
+        <div class="pieza_rotulo">
+          <span class="pieza_numeral">02</span>
+          <h3 class="pieza_nombre">Courier</h3>
+        </div>
+        <p class="pieza_sinopsis">
+          Cliente HTTP sin dependencias para entornos embebidos. Envía y olvida,
+          con reintento exponencial y cero telemetría.
+        </p>
+        <a class="pieza_trazo" href="#" aria-label="Ver proyecto Courier">
+          <span aria-hidden="true">⟶</span>
+        </a>
+      </article>
+
+      <article class="pieza_lienzo" data-reveal>
+        <div class="pieza_rotulo">
+          <span class="pieza_numeral">03</span>
+          <h3 class="pieza_nombre">Marginalia</h3>
+        </div>
+        <p class="pieza_sinopsis">
+          Notas al margen de sistemas en producción. Lecciones de guerra
+          traducidas a comentarios de código.
+        </p>
+        <a class="pieza_trazo" href="#" aria-label="Ver proyecto Marginalia">
+          <span aria-hidden="true">⟶</span>
+        </a>
+      </article>
+    </section>
+
+    <!-- ARTIFACT_MARGINALIA: piezas menores, a la derecha, como anotaciones.
+         El grid aquí es 1/3 - 2/3 para romper la simetría del bloque anterior. -->
+    <section class="artifact_marginalia" id="marginalia" aria-labelledby="marginalia_titular">
+      <h2 id="marginalia_titular" class="marginalia_titular">Marginalia</h2>
+      <div class="marginalia_trama">
+        <p class="marginalia_nota" data-reveal>
+          <span class="marginalia_fecha">2026 · agosto</span>
+          Por qué dejé de usar `border-radius: 8px` y empecé a dibujar bordes que parecen hojas.
+        </p>
+        <p class="marginalia_nota" data-reveal>
+          <span class="marginalia_fecha">2026 · julio</span>
+          El costo invisible de un kilobyte: una defensa del ascetismo en la web.
+        </p>
+        <p class="marginalia_nota" data-reveal>
+          <span class="marginalia_fecha">2026 · junio</span>
+          Notas sobre tipografía variable autoalojada sin vender el alma a un CDN.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="folio_colofon" id="correspondencia" role="contentinfo">
+    <p class="colofon_linea">Hecho a mano, sin telemetría, sin CDN.</p>
+    <a class="colofon_correo" href="mailto:hola@ejemplo.dev">hola@ejemplo.dev</a>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
