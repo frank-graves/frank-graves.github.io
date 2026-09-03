@@ -1,50 +1,31 @@
 /* ==========================================================================
-   CUADERNO DE OFICIO — Hoja de estilos Y2K
+   CONSOLA DE OFICIO — Hoja de estilos tácticos
    --------------------------------------------------------------------------
    Principios:
-   - Oscuro y ácido: negro tinta, lima, magenta, cyan. Nada de azul default.
-   - Textura sin imágenes: gradientes y data-URI para ruido y scanlines.
-   - Asimetría intencional: el ojo necesita fricción para detenerse.
-   - Solo animamos transform y opacity. Nada de layout/paint en el hilo principal.
+   - Pantalla única: body sin scroll, 100dvh, grid de 3 zonas.
+   - Precisión: clip-path biselado, retículas hairline 1px, monospace.
+   - Navegación CSS pura: radio inputs + :checked ~. Cero JavaScript.
+   - Solo animamos transform y opacity. Nada de layout/paint.
    ========================================================================== */
 
-/* --------------------------------------------------------------------------
-   Tipografía variable autoalojada.
-   Coloca los woff2 en /fonts/ y descomenta los @font-face.
-   Mientras tanto, el fallback usa fuentes del sistema (cero requests externos).
-   Fuentes OFL: Unbounded (display) y Space Grotesk (texto).
-   -------------------------------------------------------------------------- */
-/* @font-face {
-  font-family: 'Unbounded Variable';
-  src: url('fonts/Unbounded--variable.woff2') format('woff2-variations');
-  font-weight: 200 900;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Space Grotesk Variable';
-  src: url('fonts/SpaceGrotesk--variable.woff2') format('woff2-variations');
-  font-weight: 300 700;
-  font-display: swap;
-} */
-
 :root {
-  /* Paleta ácida sobre negro: tinta, lima, magenta, cyan, lino oscuro. */
-  --tono_tinta: #0d0d0f;
-  --tono_humo: #16161a;
-  --tono_lino: #1e1e24;
-  --tono_texto: #e8e8f0;
-  --tono_tenue: #9a9aa5;
-  --tono_lima: #b6ff00;
-  --tono_magenta: #ff2d95;
-  --tono_cyan: #00e5ff;
+  /* Paleta de alto contraste sobre fondo oscuro. */
+  --negro-consola: #0a0a0c;
+  --panel-consola: #111114;
+  --panel-elevado: #17171b;
+  --borde-consola: #2a2a30;
+  --texto-principal: #e8e8ec;
+  --texto-tenue: #9a9aa5;
+  --acento-verde: #b6ff00;
+  --acento-cyan: #00e5ff;
+  --acento-magenta: #ff2d95;
+  --alerta-ambar: #ffb000;
 
-  /* Tipografía: variable si está disponible, si no, system-ui. */
-  --pila_display: 'Unbounded Variable', 'Arial Black', system-ui, sans-serif;
-  --pila_texto: 'Space Grotesk Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* Monospace pura: sin fuentes externas. */
+  --pila-mono: ui-monospace, 'Cascadia Code', 'JetBrains Mono', 'Fira Code', Menlo, Consolas, monospace;
 
   /* Curvas custom. Prohibido ease-in-out. */
-  --curva_reposo: cubic-bezier(0.16, 1, 0.3, 1);   /* easeOutExpo: arranca rápido, aterriza suave */
-  --curva_pulso: cubic-bezier(0.34, 1.56, 0.64, 1); /* rebote contenido, no estridente */
+  --curva-reposo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 *,
@@ -55,343 +36,428 @@
   padding: 0;
 }
 
-html {
-  scroll-behavior: smooth;
+html,
+body {
+  height: 100%;
 }
 
 body {
-  background-color: var(--tono_tinta);
-  /* Ruido orgánico: data-URI SVG con feTurbulence. Cero request externo. */
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='ruido'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23ruido)' opacity='0.06'/%3E%3C/svg%3E"),
-    radial-gradient(1200px 600px at 80% -10%, rgba(255, 45, 149, 0.08) 0%, transparent 55%),
-    radial-gradient(1000px 500px at -10% 110%, rgba(0, 229, 255, 0.06) 0%, transparent 55%);
-  color: var(--tono_texto);
-  font-family: var(--pila_texto);
-  font-weight: 400;
-  line-height: 1.6;
-  min-height: 100vh;
-  padding: clamp(1.25rem, 3vw, 2.5rem);
+  background-color: var(--negro-consola);
+  color: var(--texto-principal);
+  font-family: var(--pila-mono);
+  font-size: 14px;
+  line-height: 1.5;
+  overflow: hidden; /* Pantalla única: sin scroll global. */
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
 }
 
 code {
-  font-family: 'Courier New', monospace;
-  color: var(--tono_lima);
+  font-family: inherit;
 }
 
-/* --------------------------------------------------------------------------
-   CABECERA: marca y navegación. La asimetría nace del espacio desigual
-   entre el sello y los enlaces; nada de barra centrada.
-   -------------------------------------------------------------------------- */
-.folio_cabecera {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: clamp(4rem, 10vw, 8rem);
-}
-
-.marca_courier {
-  align-items: center;
-  display: inline-flex;
-  gap: 0.5rem;
-  text-decoration: none;
-  color: var(--tono_texto);
-  font-family: var(--pila_display);
-  font-size: 1.25rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-}
-
-.marca_sello {
-  display: inline-block;
-  color: var(--tono_lima);
-  transition: transform 0.4s var(--curva_pulso);
-}
-
-.marca_courier:hover .marca_sello {
-  transform: rotate(180deg);
-}
-
-.navegacion_indice {
-  display: flex;
-  gap: clamp(1rem, 2.5vw, 2rem);
-}
-
-.navegacion_enlace {
-  color: var(--tono_tenue);
-  font-size: 0.85rem;
-  letter-spacing: 0.06em;
-  position: relative;
-  text-decoration: none;
-  text-transform: uppercase;
-}
-
-/* Subrayado ácido que crece desde la izquierda: transform sobre scaleX, barato. */
-.navegacion_enlace::after {
-  background-color: var(--tono_magenta);
-  content: '';
-  height: 2px;
-  left: 0;
-  position: absolute;
-  bottom: -6px;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.35s var(--curva_reposo);
-  width: 100%;
-}
-
-.navegacion_enlace:hover::after,
-.navegacion_enlace:focus-visible::after {
-  transform: scaleX(1);
-}
-
-/* --------------------------------------------------------------------------
-   OFICIO UMBRAL: presentación asimétrica.
-   Grid 2 columnas con proporción 2fr / 1fr: el titular domina, el prólogo
-   queda como nota al margen. En móvil se apilan.
-   -------------------------------------------------------------------------- */
-.oficio_umbral {
+/* ==========================================================================
+   GRID TÁCTICO — 3 zonas
+   ========================================================================== */
+.consola-tactica {
   display: grid;
-  gap: clamp(2rem, 5vw, 4rem);
-  grid-template-columns: minmax(0, 2fr) minmax(15ch, 1fr);
-  margin-bottom: clamp(5rem, 12vw, 10rem);
+  grid-template-columns: 300px minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) 40px;
+  grid-template-areas:
+    "panel buffer"
+    "estado estado";
+  gap: 10px;
+  height: 100dvh;
+  padding: 10px;
 }
 
-.oficio_bandera {
-  align-items: center;
+/* --------------------------------------------------------------------------
+   ZONA A — PANEL LATERAL (fijo)
+   -------------------------------------------------------------------------- */
+.panel-lateral {
+  grid-area: panel;
+  background-color: var(--panel-consola);
+  border: 1px solid var(--borde-consola);
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
   display: flex;
-  gap: 0.75rem;
-  grid-column: 1 / -1;
-  margin-bottom: -1rem;
+  flex-direction: column;
+  gap: 24px;
+  min-height: 0;
+  padding: 24px 20px;
 }
 
-.bandera_texto {
-  color: var(--tono_cyan);
-  font-size: 0.7rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+.identidad-modulo {
+  border-bottom: 1px solid var(--borde-consola);
+  padding-bottom: 18px;
 }
 
-.bandera_contador {
-  color: var(--tono_magenta);
-  font-family: 'Courier New', monospace;
+.identidad-prefijo {
+  color: var(--acento-cyan);
   font-size: 0.75rem;
-}
-
-.oficio_titular {
-  font-family: var(--pila_display);
-  font-size: clamp(2.5rem, 8vw, 5.5rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 0.95;
-  text-shadow: 3px 3px 0 var(--tono_magenta);
-}
-
-.oficio_matiz {
-  color: var(--tono_lima);
-  font-style: italic;
-  font-weight: 400;
-  text-shadow: none;
-}
-
-.oficio_prologo {
-  align-self: end;
-  border-left: 2px solid var(--tono_cyan);
-  padding-left: clamp(1rem, 2vw, 1.5rem);
-}
-
-.oficio_prologo p {
-  color: var(--tono_tenue);
-  margin-bottom: 1.5rem;
-  max-width: 34ch;
-}
-
-.botella_contacto {
-  align-items: center;
-  color: var(--tono_lima);
-  display: inline-flex;
-  gap: 0.5rem;
-  font-weight: 500;
-  text-decoration: none;
-}
-
-.botella_flecha {
-  display: inline-block;
-  transition: transform 0.4s var(--curva_pulso);
-}
-
-.botella_contacto:hover .botella_flecha {
-  transform: translateX(6px);
-}
-
-/* --------------------------------------------------------------------------
-   SHOWCASE_CONDUIT: los proyectos como conductos verticales.
-   Bordes irregulares, scanlines y acentos ácidos evitan la caja blanca.
-   -------------------------------------------------------------------------- */
-.showcase_conduit {
-  margin-bottom: clamp(5rem, 12vw, 10rem);
-}
-
-.showcase_titular,
-.marginalia_titular {
-  color: var(--tono_cyan);
-  font-family: var(--pila_display);
-  font-size: clamp(1rem, 2vw, 1.4rem);
-  font-weight: 600;
   letter-spacing: 0.1em;
-  margin-bottom: clamp(1.5rem, 4vw, 3rem);
+  margin-bottom: 8px;
   text-transform: uppercase;
 }
 
-.pieza_lienzo {
-  background-color: var(--tono_humo);
-  /* Borde orgánico asimétrico: como una hoja recortada a mano. */
-  border-radius: 58% 42% 55% 45% / 55% 48% 52% 45%;
-  border: 1px solid var(--tono_lino);
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
-  padding: clamp(1.5rem, 4vw, 2.5rem);
-  position: relative;
-  transition: transform 0.45s var(--curva_reposo);
+.identidad-nombre {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
 }
 
-/* Scanlines sutiles: textura CRT sin JS ni imágenes externas. */
-.pieza_lienzo::before {
-  background-image: repeating-linear-gradient(
-    0deg,
-    transparent 0 2px,
-    rgba(182, 255, 0, 0.03) 2px 4px
-  );
-  border-radius: inherit;
-  content: '';
-  inset: 0;
+.identidad-rol {
+  color: var(--texto-tenue);
+  font-size: 0.85rem;
+}
+
+.modulo-titulo {
+  color: var(--acento-verde);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.lenguajes-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lenguaje-tag {
+  align-items: center;
+  color: var(--texto-tenue);
+  display: flex;
+  font-size: 0.85rem;
+  gap: 8px;
+}
+
+.tag-marcador {
+  color: var(--acento-magenta);
+  font-size: 0.7rem;
+}
+
+.contacto-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.contacto-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.contacto-clave {
+  color: var(--texto-tenue);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.contacto-valor {
+  color: var(--texto-principal);
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+
+a.contacto-valor:hover {
+  color: var(--acento-cyan);
+}
+
+.panel-lateral-pie {
+  border-top: 1px solid var(--borde-consola);
+  margin-top: auto;
+  padding-top: 14px;
+}
+
+.pie-aviso {
+  color: var(--texto-tenue);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+}
+
+/* --------------------------------------------------------------------------
+   ZONA B — BUFFER CENTRAL (pestañas CSS)
+   -------------------------------------------------------------------------- */
+.buffer-central {
+  grid-area: buffer;
+  background-color: var(--panel-consola);
+  border: 1px solid var(--borde-consola);
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden; /* El scroll, si acaso, vive en los paneles, no en el body. */
+}
+
+/* Radio triggers invisibles. Gobiernan las pestañas sin JS. */
+.trigger-radio {
+  height: 1px;
+  opacity: 0;
   pointer-events: none;
   position: absolute;
+  width: 1px;
 }
 
-/* El desplazamiento crea una columna vertebral torcida a propósito. */
-.pieza_lienzo--desplazada {
-  margin-left: clamp(1rem, 4vw, 3rem);
-  margin-right: -1rem;
-}
-
-.pieza_lienzo:hover {
-  /* Solo transform: el compositor lo resuelve sin tocar layout. */
-  transform: translateY(-4px);
-  border-color: var(--tono_magenta);
-}
-
-.pieza_rotulo {
-  align-items: baseline;
+.barra-pestanas {
   display: flex;
-  gap: 0.75rem;
+  gap: 2px;
+  padding: 10px;
+  border-bottom: 1px solid var(--borde-consola);
 }
 
-.pieza_numeral {
-  color: var(--tono_magenta);
-  font-family: 'Courier New', monospace;
+.trigger-pestana {
+  background-color: var(--panel-elevado);
+  border: 1px solid var(--borde-consola);
+  color: var(--texto-tenue);
+  cursor: pointer;
   font-size: 0.8rem;
-  font-weight: 400;
-}
-
-.pieza_nombre {
-  color: var(--tono_texto);
-  font-family: var(--pila_display);
-  font-size: clamp(1.4rem, 3.5vw, 2rem);
-  font-weight: 600;
-  line-height: 1;
-}
-
-.pieza_sinopsis {
-  color: var(--tono_tenue);
-  max-width: 48ch;
-}
-
-.pieza_trazo {
-  align-items: center;
-  color: var(--tono_lima);
-  display: inline-flex;
-  font-size: 1.5rem;
-  height: 2.5rem;
-  justify-content: center;
-  text-decoration: none;
-  transition: transform 0.4s var(--curva_pulso);
-  width: 2.5rem;
-}
-
-.pieza_trazo:hover {
-  transform: scale(1.1);
-}
-
-/* --------------------------------------------------------------------------
-   ARTIFACT_MARGINALIA: notas al margen, a la derecha, en columna angosta.
-   El grid 1fr / 2fr invierte la jerarquía de la sección anterior.
-   -------------------------------------------------------------------------- */
-.artifact_marginalia {
-  margin-bottom: clamp(5rem, 12vw, 10rem);
-}
-
-.marginalia_trama {
-  display: grid;
-  gap: clamp(1.25rem, 3vw, 2rem);
-  grid-template-columns: 1fr 2fr;
-}
-
-.marginalia_nota {
-  border-top: 1px solid var(--tono_cyan);
-  color: var(--tono_tenue);
-  grid-column: 2;
-  padding-top: 0.75rem;
-}
-
-.marginalia_fecha {
-  color: var(--tono_magenta);
-  display: block;
-  font-size: 0.75rem;
   letter-spacing: 0.06em;
-  margin-bottom: 0.25rem;
+  padding: 8px 14px;
+  text-transform: uppercase;
+  transition: color 0.25s var(--curva-reposo), border-color 0.25s var(--curva-reposo);
+}
+
+.trigger-pestana:hover {
+  color: var(--texto-principal);
+  border-color: var(--acento-cyan);
+}
+
+/* Resalta el trigger activo según el radio marcado. */
+#pestana-destacados:checked ~ .barra-pestanas label[for="pestana-destacados"],
+#pestana-archivo:checked ~ .barra-pestanas label[for="pestana-archivo"],
+#pestana-certificados:checked ~ .barra-pestanas label[for="pestana-certificados"] {
+  background-color: var(--negro-consola);
+  border-color: var(--acento-verde);
+  color: var(--acento-verde);
+}
+
+/* Paneles de pestaña: ocultos por defecto. */
+.panel-pestana {
+  display: none;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto; /* Scroll interno solo si el contenido lo exige. */
+  padding: 20px;
+}
+
+/* Selector de visibilidad: el radio hermano anterior controla el panel. */
+#pestana-destacados:checked ~ .panel-destacados { display: block; }
+#pestana-archivo:checked ~ .panel-archivo { display: block; }
+#pestana-certificados:checked ~ .panel-certificados { display: block; }
+
+.panel-titulo {
+  color: var(--acento-cyan);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  margin-bottom: 20px;
   text-transform: uppercase;
 }
 
-/* --------------------------------------------------------------------------
-   COLOFÓN: cierre sin centro. Correo alineado a la derecha, línea a la izquierda.
-   -------------------------------------------------------------------------- */
-.folio_colofon {
-  align-items: baseline;
-  border-top: 2px solid var(--tono_texto);
-  display: flex;
-  justify-content: space-between;
-  padding-top: 1.5rem;
+/* --- Pestaña Destacados: fichas técnicas --- */
+.ficha-lienzo {
+  background-color: var(--panel-elevado);
+  border: 1px solid var(--borde-consola);
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  margin-bottom: 14px;
+  padding: 16px;
+  transition: transform 0.35s var(--curva-reposo);
 }
 
-.colofon_linea {
-  color: var(--tono_tenue);
+.ficha-lienzo:hover {
+  transform: translateY(-2px);
+  border-color: var(--acento-magenta);
+}
+
+.ficha-cabecera {
+  align-items: baseline;
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.ficha-nombre {
+  color: var(--texto-principal);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.ficha-badge {
+  background-color: var(--negro-consola);
+  border: 1px solid var(--acento-verde);
+  color: var(--acento-verde);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  padding: 2px 6px;
+  text-transform: uppercase;
+}
+
+.ficha-datos {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.ficha-fila {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 110px 1fr;
+}
+
+.ficha-clave {
+  color: var(--texto-tenue);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  padding-top: 2px;
+  text-transform: uppercase;
+}
+
+.ficha-valor {
+  color: var(--texto-principal);
   font-size: 0.85rem;
 }
 
-.colofon_correo {
-  color: var(--tono_lima);
-  font-family: var(--pila_display);
-  font-size: 1.1rem;
-  text-decoration: none;
+.ficha-enlace {
+  color: var(--acento-cyan);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+}
+
+.ficha-enlace:hover {
+  color: var(--acento-verde);
+}
+
+/* --- Pestaña Archivo: formato ls -la --- */
+.archivo-tabla {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.archivo-fila {
+  align-items: center;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 110px 60px 70px 1fr;
+  padding: 8px 10px;
+}
+
+.archivo-encabezado {
+  border-bottom: 1px solid var(--borde-consola);
+  margin-bottom: 6px;
+}
+
+.archivo-encabezado .archivo-celda {
+  color: var(--texto-tenue);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.archivo-fila:not(.archivo-encabezado) {
+  transition: background-color 0.2s var(--curva-reposo);
+}
+
+.archivo-fila:not(.archivo-encabezado):hover {
+  background-color: var(--panel-elevado);
+}
+
+.archivo-celda {
+  font-size: 0.8rem;
+}
+
+.archivo-permisos {
+  color: var(--texto-tenue);
+}
+
+.archivo-tamano {
+  color: var(--texto-tenue);
+}
+
+.archivo-fecha {
+  color: var(--alerta-ambar);
+}
+
+.archivo-nombre {
+  color: var(--acento-verde);
+}
+
+.archivo-nota {
+  color: var(--texto-tenue);
+  font-size: 0.75rem;
+  margin-top: 16px;
+}
+
+/* --- Pestaña Certificados: registro cronológico --- */
+.certificados-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.certificado-item {
+  align-items: flex-start;
+  display: flex;
+  gap: 14px;
+}
+
+.certificado-fecha {
+  color: var(--alerta-ambar);
+  font-size: 0.8rem;
+  min-width: 70px;
+  padding-top: 2px;
+}
+
+.certificado-cuerpo {
+  border-left: 1px solid var(--borde-consola);
+  padding-left: 14px;
+}
+
+.certificado-nombre {
+  color: var(--texto-principal);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.certificado-detalle {
+  color: var(--texto-tenue);
+  font-size: 0.8rem;
 }
 
 /* --------------------------------------------------------------------------
-   REVEAL: las piezas entran con translateY y opacity.
-   El estado inicial está inline en el JS para evitar FOUC si no hay JS.
+   ZONA C — BARRA DE ESTADO INFERIOR (fija)
    -------------------------------------------------------------------------- */
-[data-reveal] {
-  opacity: 0;
-  transform: translateY(18px);
-  transition: opacity 0.7s var(--curva_reposo), transform 0.7s var(--curva_reposo);
+.barra-estado {
+  grid-area: estado;
+  align-items: center;
+  background-color: var(--panel-consola);
+  border: 1px solid var(--borde-consola);
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  padding: 0 16px;
 }
 
-[data-reveal].es_visible {
-  opacity: 1;
-  transform: translateY(0);
+.estado-item {
+  color: var(--texto-tenue);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 /* --------------------------------------------------------------------------
@@ -403,57 +469,45 @@ code {
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
-  }
-
-  [data-reveal] {
-    opacity: 1;
-    transform: none;
   }
 }
 
 /* --------------------------------------------------------------------------
-   RESPONSIVE: en pantallas angostas la asimetría se simplifica, no desaparece.
+   RESPONSIVE: en pantallas angostas el panel lateral se pliega arriba.
+   La pantalla sigue siendo única; el buffer central gana el alto restante.
    -------------------------------------------------------------------------- */
-@media (max-width: 720px) {
-  .oficio_umbral {
+@media (max-width: 760px) {
+  .consola-tactica {
     grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr) 40px;
+    grid-template-areas:
+      "panel"
+      "buffer"
+      "estado";
   }
 
-  .oficio_bandera {
-    grid-column: 1;
+  .panel-lateral {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px 14px;
   }
 
-  .oficio_prologo {
-    border-left: 0;
-    border-top: 2px solid var(--tono_cyan);
-    padding-left: 0;
-    padding-top: 1rem;
+  .identidad-modulo,
+  .lenguajes-modulo,
+  .contacto-modulo {
+    border: 0;
+    min-width: 0;
+    padding: 0;
   }
 
-  .pieza_lienzo,
-  .pieza_lienzo--desplazada {
-    grid-template-columns: 1fr;
-    margin-left: 0;
-    margin-right: 0;
-    border-radius: 42% 58% 45% 55% / 48% 52% 48% 52%;
+  .panel-lateral-pie {
+    display: none;
   }
 
-  .pieza_trazo {
-    justify-self: end;
-  }
-
-  .marginalia_trama {
-    grid-template-columns: 1fr;
-  }
-
-  .marginalia_nota {
-    grid-column: 1;
-  }
-
-  .folio_colofon {
-    flex-direction: column;
-    gap: 1rem;
+  .lenguajes-lista {
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 }
