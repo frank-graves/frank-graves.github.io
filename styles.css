@@ -1,50 +1,52 @@
 /* ==========================================================================
-   CUADERNO DE OFICIO — Hoja de estilos
+   CUADERNO DE OFICIO — Hoja de estilos Y2K
    --------------------------------------------------------------------------
    Principios:
+   - Oscuro y ácido: negro tinta, lima, magenta, cyan. Nada de azul default.
+   - Textura sin imágenes: gradientes y data-URI para ruido y scanlines.
    - Asimetría intencional: el ojo necesita fricción para detenerse.
    - Solo animamos transform y opacity. Nada de layout/paint en el hilo principal.
-   - Colores con propósito: papel, tinta, bermellón y liquen. Nada de azul default.
-   - Sin sombras genéricas. La textura viene de gradientes sutiles y bordes orgánicos.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
    Tipografía variable autoalojada.
    Coloca los woff2 en /fonts/ y descomenta los @font-face.
    Mientras tanto, el fallback usa fuentes del sistema (cero requests externos).
-   Fuentes sugeridas con licencia OFL: Fraunces (display) y Recursive (texto).
+   Fuentes OFL: Unbounded (display) y Space Grotesk (texto).
    -------------------------------------------------------------------------- */
 /* @font-face {
-  font-family: 'Fraunces Variable';
-  src: url('fonts/Fraunces--variable.woff2') format('woff2-variations');
-  font-weight: 100 900;
+  font-family: 'Unbounded Variable';
+  src: url('fonts/Unbounded--variable.woff2') format('woff2-variations');
+  font-weight: 200 900;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Recursive Variable';
-  src: url('fonts/Recursive--variable.woff2') format('woff2-variations');
-  font-weight: 300 1000;
+  font-family: 'Space Grotesk Variable';
+  src: url('fonts/SpaceGrotesk--variable.woff2') format('woff2-variations');
+  font-weight: 300 700;
   font-display: swap;
 } */
 
 :root {
-  /* Paleta con alma: papel envejecido, tinta de imprenta, sello bermellón. */
-  --tono_papel: #faf6ef;
-  --tono_tinta: #1c1a17;
-  --tono_bermellon: #c44536;
-  --tono_liquen: #6b7f5e;
-  --tono_lino: #e6dfd2;
+  /* Paleta ácida sobre negro: tinta, lima, magenta, cyan, lino oscuro. */
+  --tono_tinta: #0d0d0f;
+  --tono_humo: #16161a;
+  --tono_lino: #1e1e24;
+  --tono_texto: #e8e8f0;
+  --tono_tenue: #9a9aa5;
+  --tono_lima: #b6ff00;
+  --tono_magenta: #ff2d95;
+  --tono_cyan: #00e5ff;
 
   /* Tipografía: variable si está disponible, si no, system-ui. */
-  --pila_display: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
-  --pila_texto: 'Recursive Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --pila_display: 'Unbounded Variable', 'Arial Black', system-ui, sans-serif;
+  --pila_texto: 'Space Grotesk Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   /* Curvas custom. Prohibido ease-in-out. */
   --curva_reposo: cubic-bezier(0.16, 1, 0.3, 1);   /* easeOutExpo: arranca rápido, aterriza suave */
   --curva_pulso: cubic-bezier(0.34, 1.56, 0.64, 1); /* rebote contenido, no estridente */
 }
 
-/* Reset mínimo: sin cajas blancas, sin sombras, sin opiniones ajenas. */
 *,
 *::before,
 *::after {
@@ -58,17 +60,23 @@ html {
 }
 
 body {
-  background-color: var(--tono_papel);
-  /* Textura de papel: dos gradientes tenues que simulan fibra sin cargar imágenes. */
+  background-color: var(--tono_tinta);
+  /* Ruido orgánico: data-URI SVG con feTurbulence. Cero request externo. */
   background-image:
-    linear-gradient(105deg, transparent 40%, rgba(28, 26, 23, 0.02) 40%, rgba(28, 26, 23, 0.02) 41%, transparent 41%),
-    repeating-linear-gradient(0deg, rgba(28, 26, 23, 0.015) 0 1px, transparent 1px 4px);
-  color: var(--tono_tinta);
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='ruido'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23ruido)' opacity='0.06'/%3E%3C/svg%3E"),
+    radial-gradient(1200px 600px at 80% -10%, rgba(255, 45, 149, 0.08) 0%, transparent 55%),
+    radial-gradient(1000px 500px at -10% 110%, rgba(0, 229, 255, 0.06) 0%, transparent 55%);
+  color: var(--tono_texto);
   font-family: var(--pila_texto);
   font-weight: 400;
   line-height: 1.6;
   min-height: 100vh;
   padding: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+code {
+  font-family: 'Courier New', monospace;
+  color: var(--tono_lima);
 }
 
 /* --------------------------------------------------------------------------
@@ -87,15 +95,16 @@ body {
   display: inline-flex;
   gap: 0.5rem;
   text-decoration: none;
-  color: var(--tono_tinta);
+  color: var(--tono_texto);
   font-family: var(--pila_display);
   font-size: 1.25rem;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 .marca_sello {
   display: inline-block;
-  color: var(--tono_bermellon);
+  color: var(--tono_lima);
   transition: transform 0.4s var(--curva_pulso);
 }
 
@@ -109,21 +118,22 @@ body {
 }
 
 .navegacion_enlace {
-  color: var(--tono_tinta);
-  font-size: 0.9rem;
-  letter-spacing: 0.02em;
+  color: var(--tono_tenue);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
   position: relative;
   text-decoration: none;
+  text-transform: uppercase;
 }
 
-/* Subrayado que crece desde la izquierda: transform sobre scaleX, barato. */
+/* Subrayado ácido que crece desde la izquierda: transform sobre scaleX, barato. */
 .navegacion_enlace::after {
-  background-color: var(--tono_bermellon);
+  background-color: var(--tono_magenta);
   content: '';
-  height: 1px;
+  height: 2px;
   left: 0;
   position: absolute;
-  bottom: -4px;
+  bottom: -6px;
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.35s var(--curva_reposo);
@@ -147,34 +157,58 @@ body {
   margin-bottom: clamp(5rem, 12vw, 10rem);
 }
 
+.oficio_bandera {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+  grid-column: 1 / -1;
+  margin-bottom: -1rem;
+}
+
+.bandera_texto {
+  color: var(--tono_cyan);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.bandera_contador {
+  color: var(--tono_magenta);
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+}
+
 .oficio_titular {
   font-family: var(--pila_display);
-  font-size: clamp(2.75rem, 9vw, 6rem);
-  font-weight: 700;
+  font-size: clamp(2.5rem, 8vw, 5.5rem);
+  font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 0.95;
+  text-shadow: 3px 3px 0 var(--tono_magenta);
 }
 
 .oficio_matiz {
-  color: var(--tono_bermellon);
+  color: var(--tono_lima);
   font-style: italic;
   font-weight: 400;
+  text-shadow: none;
 }
 
 .oficio_prologo {
   align-self: end;
-  border-left: 2px solid var(--tono_liquen);
+  border-left: 2px solid var(--tono_cyan);
   padding-left: clamp(1rem, 2vw, 1.5rem);
 }
 
 .oficio_prologo p {
+  color: var(--tono_tenue);
   margin-bottom: 1.5rem;
   max-width: 34ch;
 }
 
 .botella_contacto {
   align-items: center;
-  color: var(--tono_tinta);
+  color: var(--tono_lima);
   display: inline-flex;
   gap: 0.5rem;
   font-weight: 500;
@@ -192,8 +226,7 @@ body {
 
 /* --------------------------------------------------------------------------
    SHOWCASE_CONDUIT: los proyectos como conductos verticales.
-   Los bordes orgánicos (blob) evitan la caja blanca de bootcamp.
-   Cada pieza impar está desplazada para romper la monotonía vertical.
+   Bordes irregulares, scanlines y acentos ácidos evitan la caja blanca.
    -------------------------------------------------------------------------- */
 .showcase_conduit {
   margin-bottom: clamp(5rem, 12vw, 10rem);
@@ -201,26 +234,42 @@ body {
 
 .showcase_titular,
 .marginalia_titular {
-  color: var(--tono_liquen);
+  color: var(--tono_cyan);
   font-family: var(--pila_display);
-  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
-  font-weight: 500;
-  letter-spacing: 0.08em;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  font-weight: 600;
+  letter-spacing: 0.1em;
   margin-bottom: clamp(1.5rem, 4vw, 3rem);
   text-transform: uppercase;
 }
 
 .pieza_lienzo {
-  background-color: var(--tono_lino);
+  background-color: var(--tono_humo);
   /* Borde orgánico asimétrico: como una hoja recortada a mano. */
   border-radius: 58% 42% 55% 45% / 55% 48% 52% 45%;
+  border: 1px solid var(--tono_lino);
   display: grid;
   gap: 1rem;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
   padding: clamp(1.5rem, 4vw, 2.5rem);
+  position: relative;
   transition: transform 0.45s var(--curva_reposo);
+}
+
+/* Scanlines sutiles: textura CRT sin JS ni imágenes externas. */
+.pieza_lienzo::before {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent 0 2px,
+    rgba(182, 255, 0, 0.03) 2px 4px
+  );
+  border-radius: inherit;
+  content: '';
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
 }
 
 /* El desplazamiento crea una columna vertebral torcida a propósito. */
@@ -232,6 +281,7 @@ body {
 .pieza_lienzo:hover {
   /* Solo transform: el compositor lo resuelve sin tocar layout. */
   transform: translateY(-4px);
+  border-color: var(--tono_magenta);
 }
 
 .pieza_rotulo {
@@ -241,28 +291,28 @@ body {
 }
 
 .pieza_numeral {
-  color: var(--tono_bermellon);
-  font-family: var(--pila_display);
-  font-size: 0.85rem;
-  font-weight: 300;
+  color: var(--tono_magenta);
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  font-weight: 400;
 }
 
 .pieza_nombre {
+  color: var(--tono_texto);
   font-family: var(--pila_display);
-  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  font-size: clamp(1.4rem, 3.5vw, 2rem);
   font-weight: 600;
   line-height: 1;
 }
 
 .pieza_sinopsis {
-  color: var(--tono_tinta);
+  color: var(--tono_tenue);
   max-width: 48ch;
-  opacity: 0.8;
 }
 
 .pieza_trazo {
   align-items: center;
-  color: var(--tono_bermellon);
+  color: var(--tono_lima);
   display: inline-flex;
   font-size: 1.5rem;
   height: 2.5rem;
@@ -291,16 +341,17 @@ body {
 }
 
 .marginalia_nota {
-  border-top: 1px solid var(--tono_liquen);
+  border-top: 1px solid var(--tono_cyan);
+  color: var(--tono_tenue);
   grid-column: 2;
   padding-top: 0.75rem;
 }
 
 .marginalia_fecha {
-  color: var(--tono_bermellon);
+  color: var(--tono_magenta);
   display: block;
-  font-size: 0.8rem;
-  letter-spacing: 0.04em;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
   margin-bottom: 0.25rem;
   text-transform: uppercase;
 }
@@ -310,19 +361,19 @@ body {
    -------------------------------------------------------------------------- */
 .folio_colofon {
   align-items: baseline;
-  border-top: 2px solid var(--tono_tinta);
+  border-top: 2px solid var(--tono_texto);
   display: flex;
   justify-content: space-between;
   padding-top: 1.5rem;
 }
 
 .colofon_linea {
-  font-size: 0.9rem;
-  opacity: 0.7;
+  color: var(--tono_tenue);
+  font-size: 0.85rem;
 }
 
 .colofon_correo {
-  color: var(--tono_bermellon);
+  color: var(--tono_lima);
   font-family: var(--pila_display);
   font-size: 1.1rem;
   text-decoration: none;
@@ -370,9 +421,13 @@ body {
     grid-template-columns: 1fr;
   }
 
+  .oficio_bandera {
+    grid-column: 1;
+  }
+
   .oficio_prologo {
     border-left: 0;
-    border-top: 2px solid var(--tono_liquen);
+    border-top: 2px solid var(--tono_cyan);
     padding-left: 0;
     padding-top: 1rem;
   }

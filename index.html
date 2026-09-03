@@ -13,8 +13,8 @@
     Estructura narrativa del portafolio:
     - showcase_conduit: el canal principal que conduce la mirada a la obra.
     - artifact_marginalia: piezas secundarias, como notas al margen de un cuaderno.
-    La asimetría del grid imita la composición de una página manuscrita: el ojo
-    entra por el titular grande, deriva a la columna angosta y aterriza en los artefactos.
+    La asimetría imita un zine escaneado: el ojo entra por el titular glitch,
+    deriva a la columna angosta y aterriza en los artefactos.
   -->
   <header class="folio_cabecera" role="banner">
     <a class="marca_courier" href="/" aria-label="Volver al inicio">
@@ -30,9 +30,13 @@
   </header>
 
   <main id="contenido_principal">
-    <!-- OFICIO: presentación asimétrica. El titular grande y la columna angosta
-         crean tensión visual; el espacio vacío a la derecha es intencional. -->
+    <!-- OFICIO: presentación asimétrica. El titular glitch y la columna angosta
+         crean fricción visual; el espacio vacío a la derecha es intencional. -->
     <section class="oficio_umbral" id="oficio" aria-labelledby="oficio_titular">
+      <div class="oficio_bandera">
+        <span class="bandera_texto">// EST. 2026 — ÚLTIMA ACTUALIZACIÓN: AHORA</span>
+        <span class="bandera_contador" aria-hidden="true">█▓▒░</span>
+      </div>
       <h1 id="oficio_titular" class="oficio_titular">
         Artesano digital.<br />
         <em class="oficio_matiz">Código con textura</em>
@@ -50,7 +54,7 @@
     </section>
 
     <!-- SHOWCASE_CONDUIT: cada pieza es un conducto hacia un proyecto real.
-         El listado es vertical y asimétrico; los bordes orgánicos evitan la caja blanca. -->
+         Bordes irregulares, scanlines y acentos ácidos evitan la caja blanca. -->
     <section class="showcase_conduit" id="showcase_conduit" aria-labelledby="showcase_titular">
       <h2 id="showcase_titular" class="showcase_titular">Obra reciente</h2>
 
@@ -107,7 +111,7 @@
     </section>
 
     <!-- ARTIFACT_MARGINALIA: notas al margen, a la derecha, en columna angosta.
-         El grid aquí es 1/3 - 2/3 para romper la simetría del bloque anterior. -->
+         El grid 1/3 - 2/3 invierte la jerarquía de la sección anterior. -->
     <section class="artifact_marginalia" id="marginalia" aria-labelledby="marginalia_titular">
       <h2 id="marginalia_titular" class="marginalia_titular">Marginalia</h2>
       <div class="marginalia_trama">

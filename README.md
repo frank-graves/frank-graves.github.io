@@ -1,4 +1,4 @@
-# Cuaderno de oficio — Portafolio estático
+# Cuaderno de oficio — Portafolio estático Y2K
 
 Portafolio personal bajo la filosofía de El Arquitecto Esbelto.
 
@@ -8,7 +8,7 @@ Portafolio personal bajo la filosofía de El Arquitecto Esbelto.
 
 /
 ├── index.html      # Única página, semántica y asimétrica
-├── styles.css      # Textura, bordes orgánicos, animaciones transform-only
+├── styles.css      # Textura, scanlines, bordes orgánicos, animaciones transform-only
 ├── script.js       # Reveal con IntersectionObserver (1 KB)
 ├── favicon.svg     # Sello local, cero request externo
 └── fonts/          # (opcional) Coloca aquí tus woff2 variables
@@ -29,8 +29,8 @@ No hay build, no hay Action, no hay dependencias. Pages sirve los archivos tal c
 El CSS incluye fallbacks del sistema. Para activar tipografía variable real:
 
 1. Descarga fuentes con licencia OFL, por ejemplo:
-   - **Fraunces** (display): https://github.com/undercasetype/Fraunces
-   - **Recursive** (texto): https://github.com/arrowtype/recursive
+   - **Unbounded** (display): https://github.com/NaN-xyz/Unbounded
+   - **Space Grotesk** (texto): https://github.com/floriankarsten/space-grotesk
 2. Copia los archivos `.woff2` a `fonts/`.
 3. Descomenta los bloques `@font-face` en `styles.css`.
 
@@ -38,7 +38,7 @@ Nunca uses Google Fonts CDN: viola el requisito de privacidad y añade latencia 
 
 ## Decisiones de diseño
 
+- **Y2K/old internet**: fondo negro tinta, ácidos (lima/magenta/cyan), scanlines CRT, ruido SVG.
 - **Asimetría**: grids 2fr/1fr y 1fr/2fr alternados, piezas desplazadas, bordes blob.
 - **Rendimiento**: solo `transform` y `opacity` en animaciones; curvas `cubic-bezier` custom.
-- **Color**: papel, tinta, bermellón y liquen. Sin paletas default.
 - **Anti-IA**: variables narrativas (`showcase_conduit`, `artifact_marginalia`) y comentarios con contexto humano.
